@@ -1,0 +1,6 @@
+Qui sont les meilleurs clients ?	        customers, orders, order_items
+Quels sont les produits les plus vendus ?	products, order_items
+Quel est le CA par commercial ?	            sales_reps, orders, order_items
+Quelles sont les commandes en attente ?	    orders, customers
+Quel est le CA par catégorie ?	            categories, products, order_items
+Quels produits ont un stock faible ?	    products

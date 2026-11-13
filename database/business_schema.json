@@ -1,0 +1,396 @@
+{
+    "project": "Sales Intelligent Assistant Khady",
+    "description": "Schema metier genere a partir de la base SQL Server.",
+    "entities": [
+        {
+            "name": "Categorie",
+            "table": "categories",
+            "description": "La table \"categories\" est utilisée pour stocker les différentes catégories de produits ou de services dans une application commerciale. Elle permet de classer et d'organiser les éléments vendus ou proposés.",
+            "primary_key": [
+                "category_id"
+            ],
+            "attributes": [
+                {
+                    "column": "category_id",
+                    "type": "INTEGER",
+                    "nullable": false,
+                    "meaning": "Identifiant unique de la catégorie, utilisé pour identifier et relier les catégories à d'autres tables."
+                },
+                {
+                    "column": "category_name",
+                    "type": "NVARCHAR(100) COLLATE \"Latin1_General_CI_AS\"",
+                    "nullable": false,
+                    "meaning": "Nom de la catégorie, utilisé pour afficher ou identifier la catégorie aux utilisateurs ou aux systèmes."
+                },
+                {
+                    "column": "description",
+                    "type": "NVARCHAR COLLATE \"Latin1_General_CI_AS\"",
+                    "nullable": true,
+                    "meaning": "Description facultative de la catégorie, utilisée pour fournir plus de détails sur la nature ou le contenu de la catégorie."
+                }
+            ],
+            "relations": [
+                {
+                    "entity": "Produit",
+                    "type": "one-to-many",
+                    "description": "La table categories peut etre associee a plusieurs enregistrements de products."
+                }
+            ]
+        },
+        {
+            "name": "Client",
+            "table": "customers",
+            "description": "La table customers stocke les informations des clients d'une application commerciale. Elle permet de gérer les données des clients, comme leur nom d'entreprise, leurs coordonnées et leur localisation.",
+            "primary_key": [
+                "customer_id"
+            ],
+            "attributes": [
+                {
+                    "column": "customer_id",
+                    "type": "INTEGER",
+                    "nullable": false,
+                    "meaning": "Identifiant unique du client."
+                },
+                {
+                    "column": "company_name",
+                    "type": "NVARCHAR(150) COLLATE \"Latin1_General_CI_AS\"",
+                    "nullable": false,
+                    "meaning": "Nom de l'entreprise cliente."
+                },
+                {
+                    "column": "contact_name",
+                    "type": "NVARCHAR(100) COLLATE \"Latin1_General_CI_AS\"",
+                    "nullable": true,
+                    "meaning": "Nom de la personne de contact au sein de l'entreprise."
+                },
+                {
+                    "column": "email",
+                    "type": "NVARCHAR(150) COLLATE \"Latin1_General_CI_AS\"",
+                    "nullable": true,
+                    "meaning": "Adresse email du client ou de la personne de contact."
+                },
+                {
+                    "column": "city",
+                    "type": "NVARCHAR(100) COLLATE \"Latin1_General_CI_AS\"",
+                    "nullable": true,
+                    "meaning": "Ville du client."
+                },
+                {
+                    "column": "region",
+                    "type": "NVARCHAR(100) COLLATE \"Latin1_General_CI_AS\"",
+                    "nullable": true,
+                    "meaning": "Région du client."
+                },
+                {
+                    "column": "customer_type",
+                    "type": "NVARCHAR(20) COLLATE \"Latin1_General_CI_AS\"",
+                    "nullable": true,
+                    "meaning": "Type de client (ex: entreprise, particulier, etc.)."
+                },
+                {
+                    "column": "created_at",
+                    "type": "DATE",
+                    "nullable": false,
+                    "meaning": "Date de création du client dans le système."
+                }
+            ],
+            "relations": [
+                {
+                    "entity": "Commande",
+                    "type": "one-to-many",
+                    "description": "La table customers peut etre associee a plusieurs enregistrements de orders."
+                }
+            ]
+        },
+        {
+            "name": "Ligne de commande",
+            "table": "order_items",
+            "description": "La table order_items représente les éléments individuels d'une commande dans un système commercial. Elle stocke des informations détaillées sur chaque produit commandé, y compris la quantité, le prix unitaire et les remises appliquées.",
+            "primary_key": [
+                "order_item_id"
+            ],
+            "attributes": [
+                {
+                    "column": "order_item_id",
+                    "type": "INTEGER",
+                    "nullable": false,
+                    "meaning": "Identifiant unique de l'élément de commande."
+                },
+                {
+                    "column": "order_id",
+                    "type": "INTEGER",
+                    "nullable": false,
+                    "meaning": "Identifiant de la commande associée à cet élément."
+                },
+                {
+                    "column": "product_id",
+                    "type": "INTEGER",
+                    "nullable": false,
+                    "meaning": "Identifiant du produit commandé."
+                },
+                {
+                    "column": "quantity",
+                    "type": "INTEGER",
+                    "nullable": false,
+                    "meaning": "Quantité du produit commandé."
+                },
+                {
+                    "column": "unit_price",
+                    "type": "DECIMAL(10, 2)",
+                    "nullable": false,
+                    "meaning": "Prix unitaire du produit avant remise."
+                },
+                {
+                    "column": "discount_percent",
+                    "type": "DECIMAL(5, 2)",
+                    "nullable": true,
+                    "meaning": "Pourcentage de remise appliqué à cet élément de commande."
+                }
+            ],
+            "relations": [
+                {
+                    "entity": "Commande",
+                    "type": "many-to-one",
+                    "description": "La table order_items reference orders via ['order_id'] vers ['order_id']."
+                },
+                {
+                    "entity": "Produit",
+                    "type": "many-to-one",
+                    "description": "La table order_items reference products via ['product_id'] vers ['product_id']."
+                }
+            ]
+        },
+        {
+            "name": "Commande",
+            "table": "orders",
+            "description": "La table 'orders' stocke les informations relatives aux commandes effectuées par les clients dans une application commerciale. Elle relie les commandes aux clients et aux représentants commerciaux responsables.",
+            "primary_key": [
+                "order_id"
+            ],
+            "attributes": [
+                {
+                    "column": "order_id",
+                    "type": "INTEGER",
+                    "nullable": false,
+                    "meaning": "Identifiant unique de la commande."
+                },
+                {
+                    "column": "customer_id",
+                    "type": "INTEGER",
+                    "nullable": false,
+                    "meaning": "Identifiant du client associé à la commande."
+                },
+                {
+                    "column": "sales_rep_id",
+                    "type": "INTEGER",
+                    "nullable": false,
+                    "meaning": "Identifiant du représentant commercial responsable de la commande."
+                },
+                {
+                    "column": "order_date",
+                    "type": "DATE",
+                    "nullable": false,
+                    "meaning": "Date à laquelle la commande a été passée."
+                },
+                {
+                    "column": "status",
+                    "type": "NVARCHAR(20) COLLATE \"Latin1_General_CI_AS\"",
+                    "nullable": true,
+                    "meaning": "Statut de la commande (ex: 'en attente', 'livré', 'annulé')."
+                }
+            ],
+            "relations": [
+                {
+                    "entity": "Ligne de commande",
+                    "type": "one-to-many",
+                    "description": "La table orders peut etre associee a plusieurs enregistrements de order_items."
+                },
+                {
+                    "entity": "Client",
+                    "type": "many-to-one",
+                    "description": "La table orders reference customers via ['customer_id'] vers ['customer_id']."
+                },
+                {
+                    "entity": "Commercial",
+                    "type": "many-to-one",
+                    "description": "La table orders reference sales_reps via ['sales_rep_id'] vers ['sales_rep_id']."
+                }
+            ]
+        },
+        {
+            "name": "Produit",
+            "table": "products",
+            "description": "La table 'products' stocke les informations sur les produits d'une application commerciale. Elle permet de gérer les détails des produits, leur catégorie, fournisseur, prix, quantité en stock et leur statut d'activation.",
+            "primary_key": [
+                "product_id"
+            ],
+            "attributes": [
+                {
+                    "column": "product_id",
+                    "type": "INTEGER",
+                    "nullable": false,
+                    "meaning": "Identifiant unique du produit."
+                },
+                {
+                    "column": "product_name",
+                    "type": "NVARCHAR(150) COLLATE \"Latin1_General_CI_AS\"",
+                    "nullable": false,
+                    "meaning": "Nom du produit."
+                },
+                {
+                    "column": "category_id",
+                    "type": "INTEGER",
+                    "nullable": false,
+                    "meaning": "Identifiant de la catégorie à laquelle le produit appartient."
+                },
+                {
+                    "column": "supplier_id",
+                    "type": "INTEGER",
+                    "nullable": false,
+                    "meaning": "Identifiant du fournisseur du produit."
+                },
+                {
+                    "column": "unit_price",
+                    "type": "DECIMAL(10, 2)",
+                    "nullable": false,
+                    "meaning": "Prix de vente unitaire du produit."
+                },
+                {
+                    "column": "cost_price",
+                    "type": "DECIMAL(10, 2)",
+                    "nullable": false,
+                    "meaning": "Prix d'achat unitaire du produit."
+                },
+                {
+                    "column": "stock_quantity",
+                    "type": "INTEGER",
+                    "nullable": true,
+                    "meaning": "Quantité actuelle en stock pour le produit."
+                },
+                {
+                    "column": "reorder_level",
+                    "type": "INTEGER",
+                    "nullable": true,
+                    "meaning": "Niveau de réapprovisionnement pour le produit."
+                },
+                {
+                    "column": "active",
+                    "type": "BIT",
+                    "nullable": true,
+                    "meaning": "Indique si le produit est actif ou désactivé."
+                }
+            ],
+            "relations": [
+                {
+                    "entity": "Ligne de commande",
+                    "type": "one-to-many",
+                    "description": "La table products peut etre associee a plusieurs enregistrements de order_items."
+                },
+                {
+                    "entity": "Categorie",
+                    "type": "many-to-one",
+                    "description": "La table products reference categories via ['category_id'] vers ['category_id']."
+                },
+                {
+                    "entity": "Fournisseur",
+                    "type": "many-to-one",
+                    "description": "La table products reference suppliers via ['supplier_id'] vers ['supplier_id']."
+                }
+            ]
+        },
+        {
+            "name": "Commercial",
+            "table": "sales_reps",
+            "description": "La table 'sales_reps' stocke les informations des représentants commerciaux d'une entreprise. Elle permet de gérer les données des employés chargés de la vente et de leur attribuer des rôles ou des responsabilités spécifiques.",
+            "primary_key": [
+                "sales_rep_id"
+            ],
+            "attributes": [
+                {
+                    "column": "sales_rep_id",
+                    "type": "INTEGER",
+                    "nullable": false,
+                    "meaning": "Identifiant unique du représentant commercial."
+                },
+                {
+                    "column": "first_name",
+                    "type": "NVARCHAR(100) COLLATE \"Latin1_General_CI_AS\"",
+                    "nullable": false,
+                    "meaning": "Prénom du représentant commercial."
+                },
+                {
+                    "column": "last_name",
+                    "type": "NVARCHAR(100) COLLATE \"Latin1_General_CI_AS\"",
+                    "nullable": false,
+                    "meaning": "Nom de famille du représentant commercial."
+                },
+                {
+                    "column": "email",
+                    "type": "NVARCHAR(150) COLLATE \"Latin1_General_CI_AS\"",
+                    "nullable": true,
+                    "meaning": "Adresse e-mail du représentant commercial (optionnel)."
+                },
+                {
+                    "column": "region",
+                    "type": "NVARCHAR(100) COLLATE \"Latin1_General_CI_AS\"",
+                    "nullable": true,
+                    "meaning": "Région géographique associée au représentant commercial (optionnel)."
+                },
+                {
+                    "column": "hire_date",
+                    "type": "DATE",
+                    "nullable": true,
+                    "meaning": "Date de recrutement du représentant commercial (optionnel)."
+                }
+            ],
+            "relations": [
+                {
+                    "entity": "Commande",
+                    "type": "one-to-many",
+                    "description": "La table sales_reps peut etre associee a plusieurs enregistrements de orders."
+                }
+            ]
+        },
+        {
+            "name": "Fournisseur",
+            "table": "suppliers",
+            "description": "La table 'suppliers' stocke les informations des fournisseurs dans une application commerciale. Elle permet de gérer les données relatives aux fournisseurs, comme leur nom, leur pays et leurs coordonnées de contact.",
+            "primary_key": [
+                "supplier_id"
+            ],
+            "attributes": [
+                {
+                    "column": "supplier_id",
+                    "type": "INTEGER",
+                    "nullable": false,
+                    "meaning": "Identifiant unique du fournisseur utilisé pour le référencement et la gestion des données."
+                },
+                {
+                    "column": "supplier_name",
+                    "type": "NVARCHAR(150) COLLATE \"Latin1_General_CI_AS\"",
+                    "nullable": false,
+                    "meaning": "Nom du fournisseur, utilisé pour l'identification et la communication."
+                },
+                {
+                    "column": "country",
+                    "type": "NVARCHAR(100) COLLATE \"Latin1_General_CI_AS\"",
+                    "nullable": true,
+                    "meaning": "Pays d'origine ou de localisation du fournisseur, utilisé pour la segmentation géographique."
+                },
+                {
+                    "column": "contact_email",
+                    "type": "NVARCHAR(150) COLLATE \"Latin1_General_CI_AS\"",
+                    "nullable": true,
+                    "meaning": "Adresse e-mail de contact du fournisseur, utilisée pour les communications commerciales."
+                }
+            ],
+            "relations": [
+                {
+                    "entity": "Produit",
+                    "type": "one-to-many",
+                    "description": "La table suppliers peut etre associee a plusieurs enregistrements de products."
+                }
+            ]
+        }
+    ]
+}
